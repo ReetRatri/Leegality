@@ -1,0 +1,206 @@
+{
+  "info": {
+    "name": "Leegality Network Route API",
+    "description": "Requests for nodes, edges, shortest routes, and route history. Responses use a data/message envelope. No API token is configured yet.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "noauth"
+  },
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Response uses the data/message envelope', function () {",
+          "    const body = pm.response.json();",
+          "    pm.expect(body).to.have.property('data');",
+          "    pm.expect(body).to.have.property('message').that.is.a('string');",
+          "});"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "node_id",
+      "value": "1"
+    },
+    {
+      "key": "edge_id",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Nodes",
+      "item": [
+        {
+          "name": "List nodes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/nodes"
+          }
+        },
+        {
+          "name": "Create node A",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ServerA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/nodes"
+          }
+        },
+        {
+          "name": "Create node B",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ServerB\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/nodes"
+          }
+        },
+        {
+          "name": "Delete node by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{base_url}}/nodes/{{node_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Edges",
+      "item": [
+        {
+          "name": "List edges",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/edges"
+          }
+        },
+        {
+          "name": "Create edge ServerA to ServerB",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": \"ServerA\",\n  \"destination\": \"ServerB\",\n  \"latency\": 12.5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/edges"
+          }
+        },
+        {
+          "name": "Delete edge by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{base_url}}/edges/{{edge_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Routes",
+      "item": [
+        {
+          "name": "Shortest route by node names",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": \"ServerA\",\n  \"destination\": \"ServerB\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/routes/shortest"
+          }
+        },
+        {
+          "name": "Shortest route by node IDs",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": 1,\n  \"destination\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/routes/shortest"
+          }
+        },
+        {
+          "name": "Get route history",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/routes/history?source=ServerA&limit=10&date_from=20-02-2026"
+          }
+        }
+      ]
+    }
+  ]
+}
